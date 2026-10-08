@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cumple de Santi 2026
 
-## Getting Started
+Invitación móvil para el cumpleaños 11 de Santi en Fuga Escape Room (La Casona Dubois y El Alquimago).
 
-First, run the development server:
+## Cómo funciona
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+1. En `/panel?clave=…` se cargan los invitados. Cada uno recibe un código fácil: su nombre + 11 (`MATEO11`).
+2. El invitado abre el link y entra con su código.
+3. Resuelve los dos casos (pistas con preguntas). Al terminar se revelan fecha, lugar y la elección de sala.
+4. El servidor recuerda que ya superó el reto: al volver con su código, desde cualquier teléfono, ve los datos directo.
+
+## Dónde se cambia cada cosa
+
+- `lib/fiesta.ts`: fecha, hora, lugar y dirección. También `inicioISO` (para buscadores) e `indexar`.
+- `lib/preguntas.ts`: las preguntas de cada caso, sus respuestas válidas y sus pistas.
+- `lib/config.ts`: nombre, edad, cupos por sala y fecha límite para responder.
+- `public/audio/misterio.mp3`: música de fondo («Investigations», Kevin MacLeod, CC BY 4.0; el crédito va en el pie).
+
+## Desarrollo
+
+```
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sin base de datos conectada, los invitados se guardan en `.data/invitados.json`.
+La clave local del panel está en `.env.local` (`PANEL_KEY`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Producción (Vercel)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Crear el proyecto en Vercel y conectarle una base Neon desde Storage (deja `DATABASE_URL` lista).
+2. Agregar la variable `PANEL_KEY` con la clave que quieras para el panel.
+3. Desplegar. La tabla `invitados` se crea sola con la primera visita.
+4. Entrar a `/panel?clave=…` y cargar los invitados.
