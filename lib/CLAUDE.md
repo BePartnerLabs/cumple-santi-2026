@@ -22,5 +22,5 @@
 ## Para cambiar algo común
 
 - **Otra pregunta, pista o elemento químico**: `historia.ts`. El acertijo del boleto depende de las caras del maletín en `components/Maletin3D.tsx` (andén 3, 22:00, vagón 11): si cambias una, cambia la otra.
-- **Fecha, hora o lugar**: `fiesta.ts`. Los textos fijos «14:40» y «14:25» también aparecen en `historia.ts`, `Final.tsx`, `Guardar.tsx` y `app/calendario/route.ts`.
+- **Fecha, hora o lugar**: `fiesta.ts`. Los textos fijos «14:40» y «14:25» también aparecen en `Final.tsx`, `Guardar.tsx` y `app/calendario/route.ts`.
 - **Plazo para responder**: `config.ts` → `responderAntesDe`.
