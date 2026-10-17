@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { type Vista } from "@/lib/config";
 import { encontrarHuevo, EVENTO_HUEVO, HUEVOS, type HuevoId } from "@/lib/huevos";
+import { activarMovimiento, usePideMovimiento } from "@/lib/movimiento";
 import { ErrorDeCodigo, guardarProgreso, olvidarProgreso, pedir, useProgreso } from "@/lib/progreso";
 import { enSilencio, musica, ponerSilencio, sonar } from "@/lib/sonido";
 import { Cuartel } from "./Cuartel";
@@ -21,6 +22,7 @@ export function Invitation() {
   const [rejugando, setRejugando] = useState(false);
   const [error, setError] = useState("");
   const [huevo, setHuevo] = useState<HuevoId | null>(null);
+  const [pideMovimiento, setPideMovimiento] = usePideMovimiento();
 
   // Quien vuelve con su código guardado entra directo: el servidor dice si ya superó el reto.
   useEffect(() => {
@@ -108,6 +110,11 @@ export function Invitation() {
     window.scrollTo(0, 0);
   }
 
+  // En iPhone el giroscopio necesita permiso, y solo se puede pedir con un toque.
+  async function moverse() {
+    if (await activarMovimiento()) setPideMovimiento(false);
+  }
+
   function alternarSonido() {
     ponerSilencio(!silencio);
     setSilencio(!silencio);
@@ -135,6 +142,11 @@ export function Invitation() {
       <button type="button" className="sonido" onClick={alternarSonido} aria-pressed={!silencio}>
         {silencio ? "Sonido apagado" : "Sonido prendido"}
       </button>
+      {local.codigo && pideMovimiento && (
+        <button type="button" className="movimiento" onClick={moverse}>
+          Activar movimiento
+        </button>
+      )}
 
       <main inert={!local.codigo} className="juego">
         {!vista ? (
@@ -142,7 +154,10 @@ export function Invitation() {
         ) : enFinal ? (
           <Final vista={vista} onVista={setVista} huevos={local.huevos.length} onRejugar={rejugar} onSalir={salir} />
         ) : actual === "cuartel" ? (
-          <Cuartel key="cuartel" nombre={vista.invitado.nombre} onAceptar={() => ir("lab")} />
+          <Cuartel key="cuartel" nombre={vista.invitado.nombre} onAceptar={() => {
+              void moverse();
+              ir("lab");
+            }} />
         ) : actual === "lab" ? (
           <Laboratorio
             key="lab"

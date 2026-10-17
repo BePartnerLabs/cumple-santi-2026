@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { publico } from "@/lib/config";
 import { cuartel } from "@/lib/historia";
 import { encontrarHuevo } from "@/lib/huevos";
+import { useInclinacion } from "@/lib/movimiento";
 import { sonar } from "@/lib/sonido";
 
 // Escena 1: el mensaje del Director, con efecto de máquina de escribir.
@@ -39,7 +40,7 @@ export function Cuartel({ nombre, onAceptar }: { nombre: string; onAceptar: () =
         {publico.festejado} cumple {publico.edad}
       </h1>
 
-      <Mapa />
+      <MapaInclinable />
 
       <div className="mensaje" onClick={() => setLetras(texto.length)}>
         <p className="mensaje__de">Mensaje del Director</p>
@@ -61,6 +62,15 @@ export function Cuartel({ nombre, onAceptar }: { nombre: string; onAceptar: () =
         {cuartel.boton}
       </button>
     </section>
+  );
+}
+
+function MapaInclinable() {
+  const inc = useInclinacion();
+  return (
+    <div className="mapa-marco" style={{ transform: `perspective(700px) rotateX(${inc.y * -10}deg) rotateY(${inc.x * 12}deg)` }}>
+      <Mapa />
+    </div>
   );
 }
 

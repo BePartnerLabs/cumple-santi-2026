@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { laboratorio } from "@/lib/historia";
 import { encontrarHuevo } from "@/lib/huevos";
+import { vibrar } from "@/lib/movimiento";
 import { sonar } from "@/lib/sonido";
 
 const TUBOS = [
@@ -66,6 +67,7 @@ function Puerta({ onAbierta }: { onAbierta: () => void }) {
       return;
     }
     sonar("fallo");
+    vibrar(90);
     setFallos(fallos + 1);
     setValor("");
     setTemblor(true);
@@ -118,6 +120,7 @@ function Mezcla({ onVirus }: { onVirus: () => void }) {
       }
       setUltimoFallo(id);
       sonar("fallo");
+      vibrar([40, 30, 40]);
       setFallos(fallos + 1);
       setMezcla([]);
       setPuf(true);
@@ -127,6 +130,7 @@ function Mezcla({ onVirus }: { onVirus: () => void }) {
     setMezcla(nueva);
     if (nueva.length === RECETA.length) {
       sonar("alarma");
+      vibrar([200, 100, 200, 100, 400]);
       window.setTimeout(onVirus, 500);
     } else sonar("burbuja");
   }

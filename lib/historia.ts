@@ -30,7 +30,7 @@ export const laboratorio = {
 export const estacion = {
   titulo: "Estación del Este",
   intro: "Seguiste el maletín hasta la estación. Sir Clarence lo recibe en el andén, entre la niebla. Tienes que subir a ese tren.",
-  maletin: "Gira el maletín con el dedo: tiene tres números grabados.",
+  maletin: "Gira el maletín con el dedo o inclina el teléfono: tiene tres números grabados.",
   revisor: "«Este no es su boleto, joven.» Mira otra vez el maletín.",
   partida: "El tren arranca. Por las ventanas pasan cinco pasajeros. Sir Clarence entra a su cabina con el maletín.",
   gancho: "Antes de llegar a Budapest, alguien va a intentar quedarse con ese maletín.",

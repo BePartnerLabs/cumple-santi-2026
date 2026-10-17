@@ -3,6 +3,7 @@
 import { publico, salas, type Vista } from "@/lib/config";
 import { final } from "@/lib/historia";
 import { TOTAL_HUEVOS } from "@/lib/huevos";
+import { useInclinacion } from "@/lib/movimiento";
 import { Rsvp } from "./Rsvp";
 
 // Final: la tarjeta de agente con fecha, lugar y puerta elegida. Es lo que ve
@@ -21,6 +22,7 @@ export function Final({
   onSalir: () => void;
 }) {
   const { invitado, fiesta } = vista;
+  const inc = useInclinacion();
   const puerta = invitado.asiste && invitado.sala && invitado.sala !== "igual" ? invitado.sala : null;
 
   return (
@@ -30,7 +32,10 @@ export function Final({
         Tarjeta de agente
       </h2>
 
-      <article className={`tarjeta${puerta ? ` tarjeta--${puerta}` : ""}`}>
+      <article
+        className={`tarjeta${puerta ? ` tarjeta--${puerta}` : ""}`}
+        style={{ "--ix": inc.x, "--iy": inc.y } as React.CSSProperties}
+      >
         <header className="tarjeta__cabecera">
           <span>Agencia del Director {publico.festejado}</span>
           <span className="tarjeta__codigo">{invitado.codigo}</span>

@@ -3,22 +3,27 @@
 import { useRef, useState } from "react";
 import { BOLETO_CORRECTO, BOLETOS, estacion, type Boleto } from "@/lib/historia";
 import { encontrarHuevo } from "@/lib/huevos";
+import { useInclinacion, vibrar } from "@/lib/movimiento";
 import { sonar } from "@/lib/sonido";
+import { Maletin3D } from "./Maletin3D";
 
 // Acto II: antes de subir al tren. Acertijo 3: el maletín 3D y el boleto correcto.
 export function Estacion({ onTerminado }: { onTerminado: () => void }) {
   const [errado, setErrado] = useState<string[]>([]);
   const [partiendo, setPartiendo] = useState(false);
   const lunas = useRef(0);
+  const inc = useInclinacion();
 
   function elegir(b: Boleto) {
     if (partiendo || errado.includes(b.id)) return;
     if (b.id !== BOLETO_CORRECTO) {
       sonar("fallo");
+      vibrar(90);
       setErrado([...errado, b.id]);
       return;
     }
     sonar("silbato");
+    vibrar([60, 40, 60, 40, 200]);
     setPartiendo(true);
   }
 
@@ -29,7 +34,7 @@ export function Estacion({ onTerminado }: { onTerminado: () => void }) {
         {estacion.titulo}
       </h2>
 
-      <div className="anden">
+      <div className="anden" style={{ "--ix": inc.x, "--iy": inc.y } as React.CSSProperties}>
         <svg className="anden__cielo" viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <rect width="360" height="200" fill="#141a33" />
           <path d="M0 150l60-50 50 34 70-64 80 70 50-28 50 36v52H0z" fill="#1d2546" />
@@ -52,7 +57,7 @@ export function Estacion({ onTerminado }: { onTerminado: () => void }) {
       {!partiendo ? (
         <>
           <p className="juego__texto">{estacion.intro}</p>
-          <Maletin />
+          <Maletin3D respaldo={<Maletin />} />
           <p className="juego__instruccion">{estacion.maletin}</p>
           <div className="boletos" role="group" aria-label="Elige el boleto correcto">
             {BOLETOS.map((b) => (
