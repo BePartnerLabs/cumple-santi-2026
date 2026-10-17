@@ -22,7 +22,7 @@ export default function Image() {
           color: "#dfe8f4",
         }}
       >
-        <div style={{ display: "flex", fontSize: 38, color: "#9fb0c8" }}>Budapest Express o Antídoto: dos casos por resolver</div>
+        <div style={{ display: "flex", fontSize: 38, color: "#9fb0c8" }}>Expediente TS-51 · Una misión del Director Santi</div>
         <div style={{ display: "flex", fontSize: 132, fontWeight: 700, color: "#e8c46a", lineHeight: 1, whiteSpace: "nowrap" }}>
           {publico.festejado} cumple {publico.edad}
         </div>

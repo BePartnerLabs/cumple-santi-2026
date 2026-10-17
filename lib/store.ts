@@ -63,21 +63,13 @@ async function writeFile(all: Record<string, Invitado>) {
   await fs.writeFile(file, JSON.stringify(all, null, 2));
 }
 
-// Las salas antiguas (Fuga Escape Room) se guardaron con otros nombres:
-// quien ya había elegido queda en la sala equivalente del nuevo local.
-const SALAS_ANTIGUAS: Record<string, Preferencia> = { casona: "budapest", alquimago: "antidoto" };
-const salaVigente = (s: string | null): Preferencia | null => (s ? (SALAS_ANTIGUAS[s] ?? (s as Preferencia)) : null);
-
 export async function listInvitados(): Promise<Invitado[]> {
-  if (enArchivo())
-    return Object.values(await readFile())
-      .map((i) => ({ ...i, sala: salaVigente(i.sala) }))
-      .sort((a, b) => a.ts - b.ts);
+  if (enArchivo()) return Object.values(await readFile()).sort((a, b) => a.ts - b.ts);
   const { rows } = await (await db()).query(
     "SELECT id, codigo, nombre, reto, asiste, sala, nota, ts FROM invitados ORDER BY ts",
   );
   // bigint llega como texto desde Postgres
-  return rows.map((r) => ({ ...r, sala: salaVigente(r.sala), ts: Number(r.ts) }));
+  return rows.map((r) => ({ ...r, ts: Number(r.ts) }));
 }
 
 export async function saveInvitado(i: Invitado) {

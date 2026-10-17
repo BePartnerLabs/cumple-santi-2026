@@ -1,19 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Jolly_Lodger } from "next/font/google";
+import { Figtree, Special_Elite } from "next/font/google";
 import { publico } from "@/lib/config";
 import { fiesta, indexar, inicioISO } from "@/lib/fiesta";
 import "./globals.css";
+import "./juego.css";
 
-const titulos = Jolly_Lodger({ weight: "400", subsets: ["latin"], variable: "--font-titulos" });
+const titulos = Special_Elite({ weight: "400", subsets: ["latin"], variable: "--font-titulos" });
 const texto = Figtree({ subsets: ["latin"], variable: "--font-texto" });
 
 const sitio = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : "http://localhost:3000";
 
-const titulo = `${publico.festejado} cumple ${publico.edad}: dos casos por resolver`;
+const titulo = `${publico.festejado} cumple ${publico.edad}: Expediente TS-51`;
 // Esto es lo que se ve al compartir el link (WhatsApp, etc.): cuándo y dónde.
-const resumen = `${fiesta.dia}, ${fiesta.hora.toLowerCase()}. ${fiesta.lugar}, ${fiesta.direccion}. Entra con tu código, atrapa al asesino del Budapest Express, prepara el antídoto y elige tu sala.`;
+const resumen = `${fiesta.dia}, ${fiesta.hora.toLowerCase()}. ${fiesta.lugar}, ${fiesta.direccion}. Entra con tu número de agente, resuelve 3 acertijos y elige tu puerta: Budapest Express o Antídoto.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(sitio),

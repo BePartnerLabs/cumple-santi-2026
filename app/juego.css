@@ -1,0 +1,862 @@
+/* ───── Expediente TS-51: escenas del juego ───── */
+
+:root {
+  --acero: #2b3346;
+  --acero-claro: #46506a;
+  --toxico: #a6f24a;
+  --virus: #9b4dff;
+}
+
+/* La puerta de la agencia: acero en vez de madera */
+.gate__hoja {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.4), transparent 10%, transparent 90%, rgb(0 0 0 / 0.4)),
+    repeating-linear-gradient(0deg, var(--acero) 0 4.5rem, #232a3b 4.5rem 4.65rem);
+}
+
+.gate__hoja--izq::after,
+.gate__hoja--der::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0.75rem;
+  height: 4.5rem;
+  translate: 0 -50%;
+  border-radius: 0.5rem;
+  background: linear-gradient(var(--oro), #8a6a1f);
+}
+
+.gate__hoja--izq::after {
+  right: 1rem;
+}
+
+.gate__hoja--der::after {
+  left: 1rem;
+}
+
+.juego {
+  background: radial-gradient(120% 60% at 50% 0%, #17203a, var(--noche) 60%);
+}
+
+.juego__cargando {
+  padding: 40vh 1.5rem 0;
+  text-align: center;
+  color: var(--luna-suave);
+}
+
+.escena-juego {
+  padding: 4.25rem 1.5rem 3.5rem;
+  min-height: 100dvh;
+  animation: escena-entra 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes escena-entra {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.98);
+  }
+}
+
+.juego__sello {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border: 1.5px solid currentColor;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #e86a6a;
+  transform: rotate(-2deg);
+}
+
+.juego__titulo {
+  margin-top: 0.75rem;
+  font-family: var(--font-titulos), monospace;
+  font-weight: 400;
+  font-size: 2.6rem;
+  line-height: 1.05;
+  color: var(--oro);
+  user-select: none;
+}
+
+.juego__texto {
+  margin-top: 1.25rem;
+}
+
+.juego__instruccion {
+  margin-top: 1rem;
+  font-weight: 600;
+  min-height: 3.1em;
+}
+
+.juego__pista {
+  margin-top: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+  background: rgb(232 196 106 / 0.12);
+  color: var(--oro);
+  font-weight: 600;
+}
+
+.juego__accion {
+  margin-top: 1.75rem;
+}
+
+/* Cuartel */
+
+.mapa {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.mapa__chinche circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: latido 1.6s ease-in-out infinite;
+}
+
+.mapa__chinche--tren circle {
+  animation-delay: 0.8s;
+}
+
+@keyframes latido {
+  50% {
+    transform: scale(1.35);
+  }
+}
+
+.mensaje {
+  margin-top: 1.25rem;
+  padding: 1.125rem 1.25rem;
+  border-radius: 0.75rem;
+  background: #efe3c4;
+  color: #2a1a10;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+  transform: rotate(-0.6deg);
+}
+
+.mensaje__de {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a2a2a;
+}
+
+.mensaje__texto {
+  margin-top: 0.5rem;
+  font-family: var(--font-titulos), monospace;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  min-height: 12em;
+}
+
+.mensaje__cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.1em;
+  background: #2a1a10;
+  animation: parpadeo 0.8s steps(1) infinite;
+}
+
+@keyframes parpadeo {
+  50% {
+    opacity: 0;
+  }
+}
+
+.pelota {
+  display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 1.25rem 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pelota:active {
+  animation: bote 0.35s ease-out;
+}
+
+@keyframes bote {
+  40% {
+    transform: translateY(-1.25rem) rotate(120deg);
+  }
+}
+
+/* Laboratorio */
+
+.escena-juego--lab {
+  background: radial-gradient(120% 60% at 50% 0%, #10302a, #0b1a17 65%);
+}
+
+.escena-juego--lab .juego__titulo {
+  color: var(--toxico);
+}
+
+.lector {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 2px solid var(--acero-claro);
+  border-radius: 1rem;
+  background: linear-gradient(#20283a, #151b29);
+}
+
+.lector--error {
+  animation: temblor 0.45s;
+  border-color: #e86a6a;
+}
+
+.lector--ok {
+  border-color: var(--toxico);
+  box-shadow: 0 0 24px rgb(166 242 74 / 0.35);
+}
+
+@keyframes temblor {
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+.lector__pregunta {
+  font-weight: 600;
+}
+
+.lector__pantalla {
+  display: block;
+  margin-top: 0.875rem;
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+  background: #06110b;
+  color: var(--toxico);
+  font-family: ui-monospace, monospace;
+  font-size: 1.75rem;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+.teclado {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.tecla {
+  min-height: 3.25rem;
+  border: 0;
+  border-radius: 0.625rem;
+  background: var(--acero-claro);
+  color: var(--luna);
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: 0 3px 0 #1a2030;
+}
+
+.tecla:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #1a2030;
+}
+
+.tecla--ok {
+  background: var(--toxico);
+  color: #0b1a14;
+}
+
+.tecla:disabled {
+  opacity: 0.4;
+}
+
+.pizarra {
+  margin-top: 1.25rem;
+  padding: 1rem 1.125rem;
+  border: 6px solid #6b4a2a;
+  border-radius: 0.5rem;
+  background: #1f3a2e;
+  font-family: var(--font-titulos), monospace;
+  color: #e6efe9;
+}
+
+.mesa {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  align-items: end;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.mesa--puf .matraz {
+  animation: temblor 0.45s;
+  filter: drop-shadow(0 0 18px #9b4dff);
+}
+
+.matraz {
+  width: 100%;
+}
+
+.matraz--burbujas {
+  display: block;
+  width: 9rem;
+  margin: 1.5rem auto 0;
+  filter: drop-shadow(0 0 28px #9b4dff);
+}
+
+.burbuja {
+  animation: burbuja 1.4s ease-in infinite;
+}
+
+.burbuja--2 {
+  animation-delay: 0.45s;
+}
+
+.burbuja--3 {
+  animation-delay: 0.9s;
+}
+
+@keyframes burbuja {
+  to {
+    transform: translateY(-70px);
+    opacity: 0;
+  }
+}
+
+.tubos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.tubo {
+  display: grid;
+  justify-items: center;
+  gap: 0.375rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--luna);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.tubo:active {
+  transform: rotate(-25deg) translateX(-8px);
+}
+
+.tubo__vidrio {
+  position: relative;
+  width: 2.5rem;
+  height: 7rem;
+  border: 3px solid #cfe8dc;
+  border-top: 0;
+  border-radius: 0 0 1.25rem 1.25rem;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.06);
+}
+
+.tubo__liquido {
+  position: absolute;
+  inset: 40% 0 0;
+  background: var(--liquido);
+  transition: inset 0.5s;
+}
+
+.tubo--usado .tubo__liquido {
+  inset: 100% 0 0;
+}
+
+.tubo__simbolo {
+  position: absolute;
+  inset: auto 0 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #0b1a14;
+  font-weight: 700;
+}
+
+.tubo--usado .tubo__simbolo {
+  color: var(--luna-suave);
+}
+
+.tubo__nombre {
+  font-size: 0.875rem;
+}
+
+.escena-juego--alarma {
+  animation: alarma 0.5s steps(2) 3, escena-entra 0.6s;
+}
+
+@keyframes alarma {
+  50% {
+    background: #3a0b2e;
+    filter: hue-rotate(40deg);
+  }
+}
+
+.virus__alerta {
+  margin-top: 1rem;
+  font-family: ui-monospace, monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--virus);
+  text-shadow: 2px 0 #ff3e7f, -2px 0 #3ee9ff;
+  animation: glitch 0.3s steps(2) 6;
+}
+
+@keyframes glitch {
+  50% {
+    transform: translateX(3px) skewX(8deg);
+    text-shadow: -3px 0 #ff3e7f, 3px 0 #3ee9ff;
+  }
+}
+
+.maletita {
+  display: block;
+  width: 7rem;
+  margin: 1.25rem auto 0;
+  animation: escena-entra 0.8s 0.6s both;
+}
+
+/* Estación */
+
+.escena-juego--estacion {
+  background: radial-gradient(120% 60% at 50% 0%, #2a1020, var(--noche) 60%);
+}
+
+.anden {
+  position: relative;
+  height: 11rem;
+  margin: 1.25rem -1.5rem 0;
+  overflow: hidden;
+}
+
+.anden__cielo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.anden__luna {
+  position: absolute;
+  top: 0.875rem;
+  right: 1.5rem;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff, #dfe8f4 45%, #b9c6da);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.anden__tren {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  width: 34rem;
+  transition: transform 3.5s cubic-bezier(0.55, 0, 0.8, 0.4);
+}
+
+.anden__tren svg {
+  display: block;
+  width: 100%;
+}
+
+.anden__niebla {
+  position: absolute;
+  inset: auto 0 0;
+  height: 3rem;
+  background: linear-gradient(transparent, rgb(200 210 230 / 0.25));
+  animation: niebla 6s ease-in-out infinite alternate;
+}
+
+@keyframes niebla {
+  to {
+    transform: translateX(-2rem);
+  }
+}
+
+.escena-juego--partida .anden__tren {
+  transform: translateX(-140%);
+}
+
+.escena-juego--partida .anden__cielo {
+  animation: paneo 3.5s ease-in forwards;
+}
+
+@keyframes paneo {
+  to {
+    transform: translateX(6%) scale(1.12);
+  }
+}
+
+.maletin {
+  margin-top: 1.25rem;
+}
+
+.maletin__escena {
+  height: 12rem;
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+  touch-action: none;
+  cursor: grab;
+}
+
+.maletin__caja {
+  --w: 11rem;
+  --h: 7.5rem;
+  --d: 3rem;
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  transform-style: preserve-3d;
+  transition: transform 0.12s linear;
+}
+
+.cara {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border: 2px solid #0b0f20;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #e3e7ee, #9aa2b2);
+  color: #1b2030;
+  font-family: ui-monospace, monospace;
+  font-size: 1.625rem;
+  font-weight: 800;
+  backface-visibility: hidden;
+}
+
+.cara small {
+  font-family: var(--font-texto), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cara--frente,
+.cara--atras {
+  width: var(--w);
+  height: var(--h);
+}
+
+.cara--frente {
+  transform: translateZ(calc(var(--d) / 2));
+}
+
+.cara--atras {
+  transform: rotateY(180deg) translateZ(calc(var(--d) / 2));
+}
+
+.cara--der,
+.cara--izq {
+  width: var(--d);
+  height: var(--h);
+  left: calc((var(--w) - var(--d)) / 2);
+  font-size: 1rem;
+  writing-mode: vertical-rl;
+}
+
+.cara--der {
+  transform: rotateY(90deg) translateZ(calc(var(--w) / 2));
+}
+
+.cara--izq {
+  transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
+}
+
+.cara--der small,
+.cara--izq small {
+  writing-mode: vertical-rl;
+}
+
+.cara--arriba,
+.cara--abajo {
+  width: var(--w);
+  height: var(--d);
+  top: calc((var(--h) - var(--d)) / 2);
+  font-size: 0.75rem;
+}
+
+.cara--arriba {
+  transform: rotateX(90deg) translateZ(calc(var(--h) / 2));
+}
+
+.cara--abajo {
+  transform: rotateX(-90deg) translateZ(calc(var(--h) / 2));
+  color: var(--virus);
+}
+
+.cara__asa {
+  position: absolute;
+  top: -0.25rem;
+  width: 3.5rem;
+  height: 0.75rem;
+  border: 3px solid #0b0f20;
+  border-bottom: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.cara__etiqueta {
+  padding: 0.25rem 0.75rem;
+  border: 2px solid #0b0f20;
+  background: #efe3c4;
+  color: #5a1626;
+  font-family: var(--font-texto), sans-serif;
+  font-size: 1rem;
+}
+
+.maletin__botones {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+
+.boletos {
+  display: grid;
+  gap: 0.625rem;
+  margin-top: 1rem;
+}
+
+.boleto {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-left: 6px dashed #5a1626;
+  border-radius: 0.5rem;
+  background: #efe3c4;
+  color: #2a1a10;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.3s;
+}
+
+.boleto:active {
+  transform: scale(0.98);
+}
+
+.boleto__linea {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5a1626;
+}
+
+.boleto__datos {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+}
+
+.boleto__datos b {
+  font-size: 1.25rem;
+}
+
+.boleto--errado {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: default;
+}
+
+.partida {
+  animation: escena-entra 0.8s 1.2s both;
+}
+
+.pasajeros {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pasajero {
+  width: 2rem;
+  height: 3.25rem;
+  border-radius: 1rem 1rem 0.25rem 0.25rem;
+  background:
+    radial-gradient(circle at 50% 22%, #0b0f20 0 0.55rem, transparent 0.6rem),
+    linear-gradient(transparent 40%, #0b0f20 40%);
+  opacity: 0;
+  animation: aparece 0.5s forwards;
+}
+
+@keyframes aparece {
+  to {
+    opacity: 0.9;
+  }
+}
+
+.gancho {
+  margin-top: 1rem;
+  padding: 1rem 1.125rem;
+  border-left: 4px solid var(--oro);
+  background: rgb(232 196 106 / 0.1);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Final */
+
+.tarjeta {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1.5px solid var(--oro);
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #1c2440, #11172a);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.4);
+  animation: tarjeta-gira 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes tarjeta-gira {
+  from {
+    transform: perspective(800px) rotateY(-80deg);
+    opacity: 0;
+  }
+}
+
+.tarjeta--antidoto {
+  border-color: var(--toxico);
+}
+
+.tarjeta__cabecera {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--luna-suave);
+}
+
+.tarjeta__codigo {
+  color: var(--oro);
+}
+
+.tarjeta__nombre {
+  margin-top: 0.75rem;
+  font-family: var(--font-titulos), monospace;
+  font-size: 1.75rem;
+}
+
+.tarjeta__puerta {
+  font-weight: 700;
+  color: var(--oro);
+}
+
+.tarjeta--antidoto .tarjeta__puerta {
+  color: var(--toxico);
+}
+
+.tarjeta .datos {
+  margin-top: 1rem;
+}
+
+.tarjeta__mapa {
+  display: grid;
+  place-items: center;
+  margin-top: 1rem;
+  text-decoration: none;
+}
+
+.tip {
+  margin-top: 1.25rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background: rgb(232 196 106 / 0.12);
+}
+
+.tip strong {
+  color: var(--oro);
+}
+
+.escena-juego--final .rsvp {
+  margin-inline: -1.5rem;
+}
+
+/* Las dos puertas */
+
+.puertas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.puertas .opcion {
+  margin: 0;
+}
+
+.puertas .opcion--budapest,
+.puertas .opcion--antidoto {
+  min-height: 12rem;
+  padding: 3.5rem 0.875rem 1rem;
+  border-width: 2px;
+  border-radius: 6rem 6rem 0.5rem 0.5rem;
+  background: linear-gradient(#3a0f1b, #1e0a12);
+  transition: transform 0.4s;
+  transform-origin: left center;
+}
+
+.puertas .opcion--antidoto {
+  background: linear-gradient(#0f3a2c, #0a1e17);
+}
+
+.puertas .opcion--budapest::after,
+.puertas .opcion--antidoto::after {
+  content: "";
+  position: absolute;
+  right: 0.875rem;
+  top: 55%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--oro);
+}
+
+.puertas .opcion:has(input:checked) {
+  transform: perspective(600px) rotateY(-14deg);
+}
+
+.puertas .opcion--igual {
+  grid-column: 1 / -1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escena-juego,
+  .tarjeta,
+  .partida,
+  .maletita,
+  .virus__alerta,
+  .escena-juego--alarma,
+  .mapa__chinche circle,
+  .anden__niebla {
+    animation: none;
+  }
+
+  .anden__tren {
+    transition: none;
+  }
+}

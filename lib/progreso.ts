@@ -3,13 +3,13 @@
 import { useMemo, useSyncExternalStore } from "react";
 import type { Vista } from "./config";
 
-// Lo que este teléfono recuerda: con qué código entró y qué casos lleva.
+// Lo que este teléfono recuerda: con qué código entró y qué actos lleva.
 // Que el reto esté superado lo guarda el servidor, así vale en cualquier teléfono.
-export type Progreso = { codigo: string | null; budapest: boolean; antidoto: boolean; huevos: string[] };
+export type Progreso = { codigo: string | null; lab: boolean; estacion: boolean; huevos: string[] };
 
 const LLAVE = "santi11";
 const EVENTO = "santi11-cambio";
-const VACIO: Progreso = { codigo: null, budapest: false, antidoto: false, huevos: [] };
+const VACIO: Progreso = { codigo: null, lab: false, estacion: false, huevos: [] };
 
 // Respaldo por si el navegador bloquea localStorage (modo privado).
 let memoria: string | null = null;
