@@ -5,7 +5,7 @@ export const publico = {
   festejado: "Santi",
   edad: 11,
   duracion: "60 minutos",
-  responderAntesDe: "domingo 11 de octubre",
+  responderAntesDe: "sábado 17 de octubre",
 } as const;
 
 export type SalaId = "budapest" | "antidoto";
