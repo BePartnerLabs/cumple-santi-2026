@@ -634,6 +634,7 @@
 }
 
 .boletos {
+  scroll-margin-top: 1rem;
   display: grid;
   gap: 0.625rem;
   margin-top: 1rem;
@@ -890,7 +891,7 @@
 
 .maletin3d {
   margin-top: 1.25rem;
-  touch-action: none;
+  touch-action: pan-y;
   cursor: grab;
   min-height: 12rem;
 }
@@ -950,4 +951,114 @@
   .anden__tren {
     transition: none;
   }
+}
+
+/* Escenas Three.js */
+
+.escena3d {
+  touch-action: pan-y;
+}
+
+.escena3d canvas {
+  display: block;
+  width: 100%;
+}
+
+.anden3d {
+  margin: 1.25rem -1.5rem 0;
+  min-height: 11rem;
+  background: #141a33;
+}
+
+.anden3d .anden {
+  margin: 0;
+}
+
+.mesa3d {
+  margin-top: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #163a32, #0b1a17 70%);
+  min-height: 12rem;
+}
+
+.mesa3d .matraz {
+  display: block;
+  width: 9rem;
+  margin: 1rem auto;
+}
+
+.mesa3d.mesa--puf {
+  animation: temblor 0.45s 2;
+}
+
+.tubos--cuatro {
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 1rem;
+}
+
+.tubos--cuatro .tubo__vidrio {
+  width: 2.25rem;
+  height: 6rem;
+}
+
+.bajar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.625rem;
+  border: 1.5px dashed rgb(232 196 106 / 0.5);
+  border-radius: 0.625rem;
+  background: none;
+  color: var(--oro);
+  font: inherit;
+  font-weight: 700;
+}
+
+/* Guardar la invitación */
+
+.guardar {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #16203a, #10172a);
+  border: 1px solid #2b3346;
+}
+
+.guardar h3 {
+  font-family: var(--font-titulos), monospace;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: var(--oro);
+}
+
+.guardar__ok,
+.guardar__ayuda {
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+  background: rgb(166 242 74 / 0.1);
+}
+
+.guardar__calendario {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+.guardar__calendario small {
+  color: var(--luna-suave);
+}
+
+.boton--secundario {
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 1.5px solid var(--oro);
+  color: var(--oro);
+  text-decoration: none;
 }

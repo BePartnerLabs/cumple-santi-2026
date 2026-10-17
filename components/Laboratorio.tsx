@@ -1,17 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { laboratorio } from "@/lib/historia";
+import { laboratorio, sortearFormula } from "@/lib/historia";
 import { encontrarHuevo } from "@/lib/huevos";
 import { vibrar } from "@/lib/movimiento";
 import { sonar } from "@/lib/sonido";
-
-const TUBOS = [
-  { id: "agua", simbolo: "H₂O", nombre: "Agua", color: "#5ec8ff" },
-  { id: "sodio", simbolo: "Na", nombre: "Sodio", color: "#fdb713" },
-  { id: "cloro", simbolo: "Cl", nombre: "Cloro", color: "#a6f24a" },
-] as const;
-const RECETA = ["agua", "sodio", "cloro"];
+import { Matraz3D } from "./Matraz3D";
 
 type Paso = "puerta" | "mezcla" | "virus";
 
@@ -29,19 +23,8 @@ export function Laboratorio({ onTerminado }: { onTerminado: () => void }) {
         {laboratorio.titulo}
       </h2>
       {paso === "puerta" && <Puerta onAbierta={() => setPaso("mezcla")} />}
-      {paso === "mezcla" && <Mezcla onVirus={() => setPaso("virus")} />}
-      {paso === "virus" && (
-        <div className="virus">
-          <Matraz color="#9b4dff" burbujas />
-          <p className="virus__alerta" role="alert">
-            TS-51 · secuencia completa
-          </p>
-          <p className="juego__texto">{laboratorio.climax}</p>
-          <Maletita />
-          <button type="button" className="boton juego__accion" onClick={onTerminado}>
-            Seguir el maletín
-          </button>
-        </div>
+      {paso !== "puerta" && (
+        <Mezcla virus={paso === "virus"} onVirus={() => setPaso("virus")} onTerminado={onTerminado} />
       )}
     </section>
   );
@@ -102,16 +85,22 @@ function Puerta({ onAbierta }: { onAbierta: () => void }) {
   );
 }
 
-function Mezcla({ onVirus }: { onVirus: () => void }) {
+function Mezcla({ virus, onVirus, onTerminado }: { virus: boolean; onVirus: () => void; onTerminado: () => void }) {
+  // La fórmula se sortea una vez por partida.
+  const [formula] = useState(() => sortearFormula());
   const [mezcla, setMezcla] = useState<string[]>([]);
+  const [vertidos, setVertidos] = useState(0);
+  const [explosiones, setExplosiones] = useState(0);
   const [fallos, setFallos] = useState(0);
   const [ultimoFallo, setUltimoFallo] = useState<string | null>(null);
   const [puf, setPuf] = useState(false);
+  const receta = formula.receta;
 
   function verter(id: string) {
-    if (mezcla.includes(id)) return;
+    if (virus || mezcla.includes(id)) return;
     const nueva = [...mezcla, id];
-    if (RECETA[nueva.length - 1] !== id) {
+    setVertidos(vertidos + 1);
+    if (receta[nueva.length - 1] !== id) {
       // Sodio y después cloro: no es la fórmula, pero es sal de mesa.
       if (id === "cloro" && ultimoFallo === "sodio") {
         encontrarHuevo("sal");
@@ -119,60 +108,81 @@ function Mezcla({ onVirus }: { onVirus: () => void }) {
         return setMezcla([]);
       }
       setUltimoFallo(id);
-      sonar("fallo");
-      vibrar([40, 30, 40]);
+      sonar("explosion");
+      vibrar([300, 60, 120]);
+      setExplosiones(explosiones + 1);
       setFallos(fallos + 1);
       setMezcla([]);
       setPuf(true);
-      window.setTimeout(() => setPuf(false), 700);
+      window.setTimeout(() => setPuf(false), 1400);
       return;
     }
     setMezcla(nueva);
-    if (nueva.length === RECETA.length) {
+    if (nueva.length === receta.length) {
       sonar("alarma");
       vibrar([200, 100, 200, 100, 400]);
       window.setTimeout(onVirus, 500);
     } else sonar("burbuja");
   }
 
-  const colorMezcla = mezcla.length ? TUBOS.find((t) => t.id === mezcla.at(-1))!.color : "transparent";
+  const ultimo = formula.mesa.find((t) => t.id === mezcla.at(-1));
+  const colorMezcla = puf ? "#9b4dff" : (ultimo?.color ?? "#5ec8ff");
+  const nivel = mezcla.length / receta.length;
 
   return (
     <>
-      <blockquote className="pizarra">{laboratorio.pizarra}</blockquote>
-      <div className={`mesa${puf ? " mesa--puf" : ""}`}>
-        <Matraz color={colorMezcla} nivel={mezcla.length / RECETA.length} />
-        <div className="tubos">
-          {TUBOS.map((t) => {
-            const usado = mezcla.includes(t.id);
-            return (
-              <button
-                key={t.id}
-                type="button"
-                className={`tubo${usado ? " tubo--usado" : ""}`}
-                onClick={() => verter(t.id)}
-                aria-pressed={usado}
-                aria-label={`Verter ${t.nombre}`}
-                style={{ "--liquido": t.color } as React.CSSProperties}
-              >
-                <span className="tubo__vidrio">
-                  <span className="tubo__liquido" />
-                  <span className="tubo__simbolo">{t.simbolo}</span>
-                </span>
-                <span className="tubo__nombre">{t.nombre}</span>
-              </button>
-            );
-          })}
-        </div>
+      {!virus && <blockquote className="pizarra">{formula.pizarra}</blockquote>}
+      <div className={`mesa3d${puf ? " mesa--puf" : ""}`}>
+        <Matraz3D
+          estado={{ color: colorMezcla, nivel, virus, vertidos, explosiones }}
+          respaldo={<Matraz color={virus ? "#9b4dff" : colorMezcla} nivel={virus ? 1 : nivel} burbujas={virus} />}
+        />
       </div>
-      <p className="juego__instruccion" aria-live="polite">
-        {puf
-          ? "¡Puf! Humo morado. Lee la pizarra otra vez."
-          : mezcla.length
-            ? `Van ${mezcla.length} de 3. Sigue la fórmula.`
-            : "Toca los tubos en el orden de la pizarra para verterlos en el matraz."}
-      </p>
-      {fallos > 1 && <p className="juego__pista">Pista: {laboratorio.pistaMezcla}</p>}
+      {virus ? (
+        <div className="virus">
+          <p className="virus__alerta" role="alert">
+            TS-51 · secuencia completa
+          </p>
+          <p className="juego__texto">{laboratorio.climax}</p>
+          <Maletita />
+          <button type="button" className="boton juego__accion" onClick={onTerminado}>
+            Seguir el maletín
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="tubos tubos--cuatro">
+            {formula.mesa.map((t) => {
+              const usado = mezcla.includes(t.id);
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`tubo${usado ? " tubo--usado" : ""}`}
+                  onClick={() => verter(t.id)}
+                  aria-pressed={usado}
+                  aria-label={`Verter ${t.nombre}`}
+                  style={{ "--liquido": t.color } as React.CSSProperties}
+                >
+                  <span className="tubo__vidrio">
+                    <span className="tubo__liquido" />
+                    <span className="tubo__simbolo">{t.simbolo}</span>
+                  </span>
+                  <span className="tubo__nombre">{t.nombre}</span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="juego__instruccion" aria-live="polite">
+            {puf
+              ? "¡BOOM! Esa no era la fórmula. Lee la pizarra otra vez."
+              : mezcla.length
+                ? `Van ${mezcla.length} de 3. Sigue la fórmula.`
+                : "Toca los tubos en el orden de la pizarra. Uno de los cuatro sobra."}
+          </p>
+          {fallos > 1 && <p className="juego__pista">Pista: {formula.pista}</p>}
+        </>
+      )}
     </>
   );
 }

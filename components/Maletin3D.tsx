@@ -138,15 +138,15 @@ export function Maletin3D({ respaldo }: { respaldo: React.ReactNode }) {
         let tocado = false;
 
         const canvas = renderer.domElement;
+        canvas.style.touchAction = "pan-y";
         const abajo = (e: PointerEvent) => {
-          canvas.setPointerCapture(e.pointerId);
           arrastre = { x: e.clientX, y: e.clientY, gx: objetivo.x, gy: objetivo.y };
           tocado = true;
         };
         const mover = (e: PointerEvent) => {
           if (!arrastre) return;
+          // Solo el arrastre horizontal gira el maletín: el vertical queda para hacer scroll.
           objetivo.y = arrastre.gy + (e.clientX - arrastre.x) * 0.012;
-          objetivo.x = Math.max(-1.3, Math.min(1.3, arrastre.gx + (e.clientY - arrastre.y) * 0.012));
         };
         const arriba = () => (arrastre = null);
         canvas.addEventListener("pointerdown", abajo);

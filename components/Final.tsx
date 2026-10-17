@@ -4,6 +4,7 @@ import { publico, salas, type Vista } from "@/lib/config";
 import { final } from "@/lib/historia";
 import { TOTAL_HUEVOS } from "@/lib/huevos";
 import { useInclinacion } from "@/lib/movimiento";
+import { Guardar } from "./Guardar";
 import { Rsvp } from "./Rsvp";
 
 // Final: la tarjeta de agente con fecha, lugar y puerta elegida. Es lo que ve
@@ -84,6 +85,8 @@ export function Final({
       {invitado.asiste === null && <p className="juego__texto">{final.mensaje}</p>}
 
       <Rsvp vista={vista} onVista={onVista} />
+
+      {invitado.asiste !== false && <Guardar />}
 
       <footer className="pie">
         <h2>Para papás y mamás</h2>

@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     description: resumen,
   },
   twitter: { card: "summary_large_image", title: titulo, description: resumen },
+  // Instalada en iPhone ("Agregar a inicio") se abre como app, sin barra del navegador.
+  appleWebApp: { capable: true, title: `${publico.festejado} ${publico.edad}`, statusBarStyle: "black-translucent" },
+  icons: { apple: "/icons/icono-192.png" },
 };
 
 export const viewport: Viewport = {

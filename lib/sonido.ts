@@ -1,7 +1,7 @@
 "use client";
 
 // Efectos hechos con el sintetizador del navegador: no hay archivos de audio.
-export type Efecto = "puerta" | "hallazgo" | "acierto" | "fallo" | "caso" | "reto" | "silbato" | "burbuja" | "alarma" | "tecla";
+export type Efecto = "puerta" | "hallazgo" | "acierto" | "fallo" | "caso" | "reto" | "silbato" | "burbuja" | "alarma" | "tecla" | "explosion";
 
 const LLAVE = "santi11-silencio";
 let ctx: AudioContext | undefined;
@@ -85,6 +85,12 @@ const EFECTOS: Record<Efecto, Nota[]> = {
     { f: 880, a: 520, t: 0.35, d: 0.35, onda: "square", v: 0.06 },
     { f: 520, a: 880, t: 0.7, d: 0.35, onda: "square", v: 0.06 },
     { f: 880, a: 520, t: 1.05, d: 0.35, onda: "square", v: 0.06 },
+  ],
+  // estallido grave que cae, con un chasquido encima
+  explosion: [
+    { f: 160, a: 30, t: 0, d: 0.9, onda: "sawtooth", v: 0.3 },
+    { f: 90, a: 25, t: 0.02, d: 1.1, onda: "square", v: 0.18 },
+    { f: 1400, a: 200, t: 0, d: 0.18, onda: "square", v: 0.08 },
   ],
   tecla: [{ f: 1200, t: 0, d: 0.05, onda: "square", v: 0.04 }],
   burbuja: [

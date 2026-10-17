@@ -62,6 +62,11 @@ export function Invitation() {
     };
   }, []);
 
+  // Service worker: hace instalable la invitación y la abre sin señal.
+  useEffect(() => {
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }, []);
+
   // Para los curiosos que abren la consola del navegador.
   useEffect(() => {
     const w = window as typeof window & { santi?: () => string };
