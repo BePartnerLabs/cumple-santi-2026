@@ -1,20 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { publico, type Vista } from "@/lib/config";
+import { useEffect, useState } from "react";
+import { type Vista } from "@/lib/config";
+import { encontrarHuevo, EVENTO_HUEVO, HUEVOS, type HuevoId } from "@/lib/huevos";
+import { activarMovimiento, usePideMovimiento } from "@/lib/movimiento";
 import { ErrorDeCodigo, guardarProgreso, olvidarProgreso, pedir, useProgreso } from "@/lib/progreso";
 import { enSilencio, musica, ponerSilencio, sonar } from "@/lib/sonido";
-import { Alquimago } from "./Alquimago";
-import { Casona } from "./Casona";
+import { Cuartel } from "./Cuartel";
+import { Estacion } from "./Estacion";
+import { Final } from "./Final";
 import { Gate } from "./Gate";
-import { Rsvp } from "./Rsvp";
+import { Laboratorio } from "./Laboratorio";
+
+type Etapa = "cuartel" | "lab" | "estacion";
 
 export function Invitation() {
   const local = useProgreso();
   const [vista, setVista] = useState<Vista | null>(null);
-  const [errorReto, setErrorReto] = useState("");
   const [silencio, setSilencio] = useState(false);
-  const revelado = useRef<HTMLElement>(null);
+  const [etapa, setEtapa] = useState<Etapa>("cuartel");
+  const [rejugando, setRejugando] = useState(false);
+  const [error, setError] = useState("");
+  const [huevo, setHuevo] = useState<HuevoId | null>(null);
+  const [pideMovimiento, setPideMovimiento] = usePideMovimiento();
 
   // Quien vuelve con su código guardado entra directo: el servidor dice si ya superó el reto.
   useEffect(() => {
@@ -39,32 +47,77 @@ export function Invitation() {
     setSilencio(enSilencio());
   }, []);
 
-  const reto = vista?.invitado.reto ?? false;
-  const casona = reto || local.casona;
-  const alquimago = reto || local.alquimago;
-  const resueltos = Number(casona) + Number(alquimago);
-
-  async function registrarReto() {
-    setErrorReto("");
-    try {
-      setVista(await pedir({ codigo: local.codigo, accion: "reto" }));
-      sonar("reto");
-      requestAnimationFrame(() => revelado.current?.scrollIntoView({ behavior: "smooth" }));
-    } catch (e) {
-      setErrorReto((e as Error).message);
+  // Avisa cada secreto encontrado con un mensaje que se va solo.
+  useEffect(() => {
+    let reloj: number | undefined;
+    function mostrar(e: Event) {
+      setHuevo((e as CustomEvent<HuevoId>).detail);
+      window.clearTimeout(reloj);
+      reloj = window.setTimeout(() => setHuevo(null), 5000);
     }
+    window.addEventListener(EVENTO_HUEVO, mostrar);
+    return () => {
+      window.removeEventListener(EVENTO_HUEVO, mostrar);
+      window.clearTimeout(reloj);
+    };
+  }, []);
+
+  // Service worker: hace instalable la invitación y la abre sin señal.
+  useEffect(() => {
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }, []);
+
+  // Para los curiosos que abren la consola del navegador.
+  useEffect(() => {
+    const w = window as typeof window & { santi?: () => string };
+    w.santi = () => {
+      encontrarHuevo("hacker");
+      return "Acceso concedido, agente. Mira la invitación.";
+    };
+    console.log("%c¿Investigando el código, agente? Escribe santi() y presiona Enter.", "color:#e8c46a;font-size:14px;font-weight:bold");
+  }, []);
+
+  const reto = vista?.invitado.reto ?? false;
+  // Sin rejugar, se retoma donde quedó este teléfono.
+  const actual: Etapa = rejugando ? etapa : local.lab && etapa !== "estacion" ? "estacion" : etapa;
+  const enFinal = reto && !rejugando;
+
+  function ir(e: Etapa) {
+    setEtapa(e);
+    window.scrollTo({ top: 0 });
   }
 
-  function casoResuelto(caso: "casona" | "alquimago") {
-    guardarProgreso({ [caso]: true });
-    const otro = caso === "casona" ? alquimago : casona;
-    if (otro) window.setTimeout(registrarReto, 900); // deja sonar el final del caso
+  async function terminarEstacion() {
+    guardarProgreso({ estacion: true });
+    setError("");
+    if (!reto) {
+      try {
+        setVista(await pedir({ codigo: local.codigo, accion: "reto" }));
+      } catch (e) {
+        return setError((e as Error).message);
+      }
+    }
+    sonar("reto");
+    setRejugando(false);
+    window.scrollTo({ top: 0 });
+  }
+
+  function rejugar() {
+    setRejugando(true);
+    ir("cuartel");
   }
 
   function salir() {
     olvidarProgreso();
     setVista(null);
+    setRejugando(false);
+    setEtapa("cuartel");
     window.scrollTo(0, 0);
+  }
+
+  // En iPhone el giroscopio necesita permiso, y solo se puede pedir con un toque.
+  async function moverse() {
+    if (await activarMovimiento()) setPideMovimiento(false);
   }
 
   function alternarSonido() {
@@ -84,98 +137,50 @@ export function Invitation() {
         />
       )}
 
+      {huevo && (
+        <div className="huevo" role="status" key={huevo}>
+          <strong>¡Secreto encontrado!</strong>
+          {HUEVOS[huevo].mensaje}
+        </div>
+      )}
+
       <button type="button" className="sonido" onClick={alternarSonido} aria-pressed={!silencio}>
         {silencio ? "Sonido apagado" : "Sonido prendido"}
       </button>
+      {local.codigo && pideMovimiento && (
+        <button type="button" className="movimiento" onClick={moverse}>
+          Activar movimiento
+        </button>
+      )}
 
-      <main inert={!local.codigo}>
-        <header className="portada">
-          <p className="portada__sobre">
-            {vista ? `${vista.invitado.nombre}, estás` : "Estás"} invitado al cumpleaños de
-          </p>
-          <h1>
-            {publico.festejado} cumple {publico.edad}
-          </h1>
-          <p className="portada__bajada">
-            {reto
-              ? "Ya superaste el reto: aquí abajo están los datos de la fiesta y tu sala. Los casos siguen más abajo por si quieres repasarlos."
-              : "Dos salas de escape, dos misterios. Antes de la fiesta hay un reto: resuelve los dos casos y se revela dónde y cuándo nos juntamos."}
-          </p>
-        </header>
-
-        <section ref={revelado} className={`revelado${reto ? "" : " revelado--cerrado"}`} aria-live="polite">
-          {reto && vista?.fiesta ? (
-            <>
-              <h2>Reto superado</h2>
-              <dl className="datos">
-                <div>
-                  <dt>Cuándo</dt>
-                  <dd>
-                    {vista.fiesta.dia}
-                    <small>{vista.fiesta.hora}</small>
-                  </dd>
-                </div>
-                <div>
-                  <dt>Dónde</dt>
-                  <dd>
-                    <a href={vista.fiesta.mapa} target="_blank" rel="noreferrer">
-                      {vista.fiesta.lugar}
-                    </a>
-                    <small>{vista.fiesta.direccion}</small>
-                  </dd>
-                </div>
-              </dl>
-            </>
-          ) : (
-            <>
-              <h2>Datos bajo llave</h2>
-              <p>
-                Aquí aparecen el lugar, la hora y la lista para elegir tu sala. Llevas {resueltos} de 2
-                casos resueltos.
+      <main inert={!local.codigo} className="juego">
+        {!vista ? (
+          <p className="juego__cargando">Abriendo el expediente…</p>
+        ) : enFinal ? (
+          <Final vista={vista} onVista={setVista} huevos={local.huevos.length} onRejugar={rejugar} onSalir={salir} />
+        ) : actual === "cuartel" ? (
+          <Cuartel key="cuartel" nombre={vista.invitado.nombre} onAceptar={() => {
+              void moverse();
+              ir("lab");
+            }} />
+        ) : actual === "lab" ? (
+          <Laboratorio
+            key="lab"
+            onTerminado={() => {
+              guardarProgreso({ lab: true });
+              ir("estacion");
+            }}
+          />
+        ) : (
+          <>
+            <Estacion key="estacion" onTerminado={terminarEstacion} />
+            {error && (
+              <p className="error" role="alert">
+                {error}
               </p>
-              {resueltos === 2 && (
-                <>
-                  {errorReto && (
-                    <p className="error" role="alert">
-                      {errorReto}
-                    </p>
-                  )}
-                  <button type="button" className="boton" onClick={registrarReto}>
-                    Revelar los datos
-                  </button>
-                </>
-              )}
-            </>
-          )}
-        </section>
-
-        {reto && vista && <Rsvp vista={vista} onVista={setVista} />}
-
-        <Casona resuelto={casona} onResuelto={() => casoResuelto("casona")} />
-        <Alquimago resuelto={alquimago} onResuelto={() => casoResuelto("alquimago")} />
-
-        <footer className="pie">
-          <h2>Para papás y mamás</h2>
-          <p>
-            Es una fiesta en un escape room: cada sala dura {publico.duracion} y el grupo se divide
-            en dos equipos de hasta 6. El lugar y la hora aparecen al resolver los dos casos, que
-            toman unos minutos; después basta el código para volver a verlos.
-          </p>
-          <p>
-            El local recomienda sus salas desde los 12 años; los menores entran acompañados por un
-            adulto. La Casona Dubois cuenta una historia de fantasmas con temas oscuros; El
-            Alquimago es de magia y no asusta. Si tu hijo o hija prefiere evitar sustos, marquen El
-            Alquimago.
-          </p>
-          {vista && (
-            <button type="button" className="enlace" onClick={salir}>
-              ¿No eres {vista.invitado.nombre}? Entrar con otro código
-            </button>
-          )}
-          <p className="pie__credito">
-            Música: «Investigations», de Kevin MacLeod (incompetech.com), licencia CC BY 4.0.
-          </p>
-        </footer>
+            )}
+          </>
+        )}
       </main>
     </>
   );

@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { publico, type Vista } from "@/lib/config";
+import { encontrarHuevo } from "@/lib/huevos";
 import { pedir } from "@/lib/progreso";
+
+// Nombres de los villanos: escribirlos como código es un secreto.
+const SOSPECHOSOS = ["BAUER", "CORONELBAUER", "BRANDT", "DRBRANDT", "WALTERBRANDT"];
 
 export function Gate({ onOpen, onAbriendo }: { onOpen: (vista: Vista) => void; onAbriendo: () => void }) {
   const [codigo, setCodigo] = useState("");
@@ -13,6 +17,7 @@ export function Gate({ onOpen, onAbriendo }: { onOpen: (vista: Vista) => void; o
   async function entrar(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (SOSPECHOSOS.includes(codigo.replace(/[^A-Z]/g, ""))) return encontrarHuevo("culpable");
     setBuscando(true);
     try {
       const vista = await pedir({ codigo });
@@ -37,12 +42,12 @@ export function Gate({ onOpen, onAbriendo }: { onOpen: (vista: Vista) => void; o
           {publico.festejado} cumple {publico.edad}
         </h1>
         <p className="gate__bajada">
-          y necesita a su equipo para escapar de dos salas. Tu invitación está detrás de esta
-          puerta: se abre con el código secreto que te dio {publico.festejado}.
+          Agencia del Director {publico.festejado}. Acceso solo para agentes: la puerta se abre con
+          tu número de agente, el código que te dio el Director.
         </p>
 
         <form className="gate__codigo" onSubmit={entrar}>
-          <label htmlFor="codigo">Tu código secreto</label>
+          <label htmlFor="codigo">Tu número de agente</label>
           <input
             id="codigo"
             type="text"
@@ -56,7 +61,7 @@ export function Gate({ onOpen, onAbriendo }: { onOpen: (vista: Vista) => void; o
             maxLength={24}
           />
           <button type="submit" className="boton" disabled={buscando || abriendo || codigo.trim().length < 3}>
-            {abriendo ? "¡Clic! La puerta se abre…" : buscando ? "Revisando…" : "Abrir la puerta"}
+            {abriendo ? "Acceso concedido…" : buscando ? "Verificando…" : "Entrar a la agencia"}
           </button>
           {error && (
             <p className="error" role="alert">

@@ -1,7 +1,7 @@
 "use client";
 
 // Efectos hechos con el sintetizador del navegador: no hay archivos de audio.
-export type Efecto = "puerta" | "hallazgo" | "acierto" | "fallo" | "caso" | "reto";
+export type Efecto = "puerta" | "hallazgo" | "acierto" | "fallo" | "caso" | "reto" | "silbato" | "burbuja" | "alarma" | "tecla" | "explosion";
 
 const LLAVE = "santi11-silencio";
 let ctx: AudioContext | undefined;
@@ -72,6 +72,32 @@ function tocar(notas: Nota[]) {
 }
 
 const EFECTOS: Record<Efecto, Nota[]> = {
+  // silbato de tren: dos tonos a la vez, dos veces
+  silbato: [
+    { f: 587, t: 0, d: 0.45, onda: "triangle", v: 0.12 },
+    { f: 740, t: 0, d: 0.45, onda: "triangle", v: 0.09 },
+    { f: 587, t: 0.55, d: 0.8, onda: "triangle", v: 0.12 },
+    { f: 740, t: 0.55, d: 0.8, onda: "triangle", v: 0.09 },
+  ],
+  // sirena que sube y baja, tres veces
+  alarma: [
+    { f: 520, a: 880, t: 0, d: 0.35, onda: "square", v: 0.06 },
+    { f: 880, a: 520, t: 0.35, d: 0.35, onda: "square", v: 0.06 },
+    { f: 520, a: 880, t: 0.7, d: 0.35, onda: "square", v: 0.06 },
+    { f: 880, a: 520, t: 1.05, d: 0.35, onda: "square", v: 0.06 },
+  ],
+  // estallido grave que cae, con un chasquido encima
+  explosion: [
+    { f: 160, a: 30, t: 0, d: 0.9, onda: "sawtooth", v: 0.3 },
+    { f: 90, a: 25, t: 0.02, d: 1.1, onda: "square", v: 0.18 },
+    { f: 1400, a: 200, t: 0, d: 0.18, onda: "square", v: 0.08 },
+  ],
+  tecla: [{ f: 1200, t: 0, d: 0.05, onda: "square", v: 0.04 }],
+  burbuja: [
+    { f: 300, a: 900, t: 0, d: 0.12, v: 0.1 },
+    { f: 400, a: 1200, t: 0.14, d: 0.12, v: 0.1 },
+    { f: 350, a: 1050, t: 0.28, d: 0.14, v: 0.1 },
+  ],
   // chirrido que baja y un golpe seco
   puerta: [
     { f: 190, a: 70, t: 0, d: 1.1, onda: "sawtooth", v: 0.07 },

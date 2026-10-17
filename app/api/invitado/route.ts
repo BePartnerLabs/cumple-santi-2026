@@ -4,7 +4,7 @@ import { limpiarCodigo, listInvitados, saveInvitado, type Invitado } from "@/lib
 
 export const dynamic = "force-dynamic";
 
-const PREFERENCIAS: Preferencia[] = ["casona", "alquimago", "igual"];
+const PREFERENCIAS: Preferencia[] = ["budapest", "antidoto", "igual"];
 
 // Nombre de pila; si se repite, con la inicial del apellido ("León P.").
 function nombresCortos(todos: Invitado[]) {
@@ -23,7 +23,7 @@ function vista(yo: Invitado, todos: Invitado[]): Vista {
   const cortos = nombresCortos(todos);
   const van = todos.filter((i) => i.asiste);
   const en = (sala: Preferencia) => van.filter((i) => i.sala === sala).map((i) => cortos.get(i.id)!);
-  const equipos: Equipos = { casona: en("casona"), alquimago: en("alquimago"), igual: en("igual") };
+  const equipos: Equipos = { budapest: en("budapest"), antidoto: en("antidoto"), igual: en("igual") };
   return {
     invitado: { codigo: yo.codigo, nombre: cortos.get(yo.id)!, reto: yo.reto, asiste: yo.asiste, sala: yo.sala, nota: yo.nota },
     fiesta: yo.reto ? fiesta : null,

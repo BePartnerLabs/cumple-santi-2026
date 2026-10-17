@@ -6,9 +6,9 @@ import { pedir } from "@/lib/progreso";
 import { sonar } from "@/lib/sonido";
 
 const OPCIONES: { valor: Preferencia; titulo: string; detalle: string }[] = [
-  { valor: "casona", titulo: salas.casona.nombre, detalle: "Fantasmas, una gárgola y un sótano. Da un poco de susto." },
-  { valor: "alquimago", titulo: salas.alquimago.nombre, detalle: "Magia, pociones y un laboratorio secreto. Cero sustos." },
-  { valor: "igual", titulo: "Me da lo mismo", detalle: "Pónganme en el equipo donde falte gente." },
+  { valor: "budapest", titulo: salas.budapest.nombre, detalle: "Te quedas en el tren: algo va a pasar con Sir Clarence y el maletín." },
+  { valor: "antidoto", titulo: salas.antidoto.nombre, detalle: "Vuelves al laboratorio a encontrar la cura del TS-51." },
+  { valor: "igual", titulo: "Me da lo mismo", detalle: "El pasillo: pónganme donde falte gente." },
 ];
 
 export function Rsvp({ vista, onVista }: { vista: Vista; onVista: (v: Vista) => void }) {
@@ -18,7 +18,7 @@ export function Rsvp({ vista, onVista }: { vista: Vista; onVista: (v: Vista) => 
 
   return (
     <section className="rsvp" id="confirmar" aria-labelledby="rsvp-titulo">
-      <h2 id="rsvp-titulo">Elige tu sala</h2>
+      <h2 id="rsvp-titulo">Elige tu puerta</h2>
 
       {respondio && !editando ? (
         <div className="confirmado" role="status">
@@ -50,7 +50,7 @@ export function Rsvp({ vista, onVista }: { vista: Vista; onVista: (v: Vista) => 
         <div className="equipos">
           <h3>Así van los equipos</h3>
           <div className="equipos__dos">
-            {(["casona", "alquimago"] as const).map((s) => (
+            {(["budapest", "antidoto"] as const).map((s) => (
               <div className={`equipo equipo--${s}`} key={s}>
                 <h4>{salas[s].nombre}</h4>
                 <p className="equipo__cuenta">
@@ -89,7 +89,7 @@ function Formulario({ vista, onConfirmado }: { vista: Vista; onConfirmado: (v: V
     e.preventDefault();
     setError("");
     if (asiste && !sala) {
-      setError("Elige una sala (o marca «Me da lo mismo»).");
+      setError("Elige una puerta (o marca «Me da lo mismo»).");
       return;
     }
     setEnviando(true);
@@ -107,7 +107,7 @@ function Formulario({ vista, onConfirmado }: { vista: Vista; onConfirmado: (v: V
   return (
     <form onSubmit={confirmar} noValidate>
       <p className="rsvp__intro">
-        Somos unos 12 y hay dos salas, así que nos dividimos en dos equipos. Responde antes del{" "}
+        Somos unos 12: dos equipos de hasta 6, uno por puerta. Responde antes del{" "}
         {publico.responderAntesDe}.
       </p>
 
@@ -127,7 +127,8 @@ function Formulario({ vista, onConfirmado }: { vista: Vista; onConfirmado: (v: V
 
       {asiste && (
         <fieldset className="campo">
-          <legend>¿Qué sala prefieres?</legend>
+          <legend>¿Qué puerta eliges?</legend>
+          <div className="puertas">
           {OPCIONES.map((o) => (
             <label className={`opcion opcion--${o.valor}`} key={o.valor}>
               <input type="radio" name="sala" checked={sala === o.valor} onChange={() => setSala(o.valor)} />
@@ -137,6 +138,7 @@ function Formulario({ vista, onConfirmado }: { vista: Vista; onConfirmado: (v: V
               </span>
             </label>
           ))}
+          </div>
         </fieldset>
       )}
 

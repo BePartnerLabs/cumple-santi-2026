@@ -5,21 +5,21 @@ export const publico = {
   festejado: "Santi",
   edad: 11,
   duracion: "60 minutos",
-  responderAntesDe: "domingo 11 de octubre",
+  responderAntesDe: "sábado 17 de octubre",
 } as const;
 
-export type SalaId = "casona" | "alquimago";
+export type SalaId = "budapest" | "antidoto";
 export type Preferencia = SalaId | "igual";
 
 export const salas: Record<SalaId, { nombre: string; lema: string; cupos: number }> = {
-  casona: {
-    nombre: "La Casona Dubois",
-    lema: "A los espíritus no se les debe perturbar, a menos que no tengas otra opción.",
+  budapest: {
+    nombre: "Budapest Express",
+    lema: "El asesino ya sabe que lo estás buscando. Y tú eres el siguiente en su lista.",
     cupos: 6,
   },
-  alquimago: {
-    nombre: "El Alquimago",
-    lema: "Ahora es él quien necesita un poco de tu magia.",
+  antidoto: {
+    nombre: "Antídoto",
+    lema: "Hay una sola cura en el mundo. Encuéntrala antes que ellos.",
     cupos: 6,
   },
 };

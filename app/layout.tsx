@@ -1,19 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Jolly_Lodger } from "next/font/google";
+import { Figtree, Special_Elite } from "next/font/google";
 import { publico } from "@/lib/config";
 import { fiesta, indexar, inicioISO } from "@/lib/fiesta";
 import "./globals.css";
+import "./juego.css";
 
-const titulos = Jolly_Lodger({ weight: "400", subsets: ["latin"], variable: "--font-titulos" });
+const titulos = Special_Elite({ weight: "400", subsets: ["latin"], variable: "--font-titulos" });
 const texto = Figtree({ subsets: ["latin"], variable: "--font-texto" });
 
 const sitio = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : "http://localhost:3000";
 
-const titulo = `${publico.festejado} cumple ${publico.edad}: misión escape room`;
+const titulo = `${publico.festejado} cumple ${publico.edad}: Expediente TS-51`;
 // Esto es lo que se ve al compartir el link (WhatsApp, etc.): cuándo y dónde.
-const resumen = `${fiesta.dia}, ${fiesta.hora.toLowerCase()}. ${fiesta.lugar}, ${fiesta.direccion}. Entra con tu código, resuelve los dos casos y elige tu sala.`;
+const resumen = `${fiesta.dia}, ${fiesta.hora.toLowerCase()}. ${fiesta.lugar}, ${fiesta.direccion}. Entra con tu número de agente, resuelve 3 acertijos y elige tu puerta: Budapest Express o Antídoto.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(sitio),
@@ -30,6 +31,9 @@ export const metadata: Metadata = {
     description: resumen,
   },
   twitter: { card: "summary_large_image", title: titulo, description: resumen },
+  // Instalada en iPhone ("Agregar a inicio") se abre como app, sin barra del navegador.
+  appleWebApp: { capable: true, title: `${publico.festejado} ${publico.edad}`, statusBarStyle: "black-translucent" },
+  icons: { apple: "/icons/icono-192.png" },
 };
 
 export const viewport: Viewport = {
@@ -49,7 +53,7 @@ const evento = {
   location: {
     "@type": "Place",
     name: fiesta.lugar,
-    address: { "@type": "PostalAddress", streetAddress: "Rodó 1927", addressLocality: "Providencia", addressRegion: "Región Metropolitana", addressCountry: "CL" },
+    address: { "@type": "PostalAddress", streetAddress: "Presidente Riesco 5330", addressLocality: "Las Condes", addressRegion: "Región Metropolitana", addressCountry: "CL" },
   },
 };
 
