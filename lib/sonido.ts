@@ -1,7 +1,7 @@
 "use client";
 
 // Efectos hechos con el sintetizador del navegador: no hay archivos de audio.
-export type Efecto = "puerta" | "hallazgo" | "acierto" | "fallo" | "caso" | "reto";
+export type Efecto = "puerta" | "hallazgo" | "acierto" | "fallo" | "caso" | "reto" | "silbato" | "burbuja";
 
 const LLAVE = "santi11-silencio";
 let ctx: AudioContext | undefined;
@@ -72,6 +72,18 @@ function tocar(notas: Nota[]) {
 }
 
 const EFECTOS: Record<Efecto, Nota[]> = {
+  // silbato de tren: dos tonos a la vez, dos veces
+  silbato: [
+    { f: 587, t: 0, d: 0.45, onda: "triangle", v: 0.12 },
+    { f: 740, t: 0, d: 0.45, onda: "triangle", v: 0.09 },
+    { f: 587, t: 0.55, d: 0.8, onda: "triangle", v: 0.12 },
+    { f: 740, t: 0.55, d: 0.8, onda: "triangle", v: 0.09 },
+  ],
+  burbuja: [
+    { f: 300, a: 900, t: 0, d: 0.12, v: 0.1 },
+    { f: 400, a: 1200, t: 0.14, d: 0.12, v: 0.1 },
+    { f: 350, a: 1050, t: 0.28, d: 0.14, v: 0.1 },
+  ],
   // chirrido que baja y un golpe seco
   puerta: [
     { f: 190, a: 70, t: 0, d: 1.1, onda: "sawtooth", v: 0.07 },

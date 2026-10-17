@@ -4,40 +4,40 @@
 // - `numerica`: abre el teclado de números en el teléfono.
 export type Pregunta = { texto: string; respuestas: string[]; pista: string; numerica?: boolean };
 
-// Una por cada pista escondida en la casona.
-export const preguntasCasona: Record<"torre" | "gargola" | "ventana" | "sotano", Pregunta> = {
-  torre: {
-    texto: "Dubois llegó a Santiago en 1908 y en 1963 la casona ya estaba abandonada. ¿Cuántos años pasaron entre una fecha y la otra?",
-    respuestas: ["55", "cincuenta y cinco"],
-    pista: "Es una resta: 1963 − 1908.",
+// Una por cada pista escondida en el tren.
+export const preguntasBudapest: Record<"boleto" | "comedor" | "maleta" | "reloj", Pregunta> = {
+  boleto: {
+    texto: "El boleto dice: sale de París a las 19:00 y llega a Budapest a las 07:00 del día siguiente. ¿Cuántas horas dura el viaje?",
+    respuestas: ["12", "doce"],
+    pista: "De 19:00 a medianoche son 5 horas. Súmale las de la madrugada.",
     numerica: true,
   },
-  gargola: {
-    texto: "En el pedestal de la gárgola hay una inscripción: «x + 7 = 15». ¿Cuánto vale x?",
-    respuestas: ["8", "ocho"],
-    pista: "¿Qué número, sumado con 7, da 15?",
+  comedor: {
+    texto: "En el vagón comedor hay 8 mesas con 4 asientos cada una. Esa noche quedaron 27 asientos vacíos. ¿Cuántos pasajeros estaban cenando?",
+    respuestas: ["5", "cinco"],
+    pista: "Primero calcula cuántos asientos hay en total: 8 × 4.",
     numerica: true,
   },
-  ventana: {
-    texto: "La casona tiene 12 ventanas y solo en 1/4 de ellas se ve luz. ¿En cuántas ventanas hay luz?",
-    respuestas: ["3", "tres"],
-    pista: "Un cuarto de 12 es 12 dividido en 4.",
+  maleta: {
+    texto: "El candado de la maleta de Sir Clarence pide un número: el doble de 9, menos 3. ¿Cuál es?",
+    respuestas: ["15", "quince"],
+    pista: "El doble de 9 es 18.",
     numerica: true,
   },
-  sotano: {
-    texto: "La escalera al sótano tiene 3 tramos de 12 peldaños cada uno. ¿Cuántos peldaños hay que bajar?",
-    respuestas: ["36", "treinta y seis"],
-    pista: "Multiplica: 12 × 3.",
+  reloj: {
+    texto: "El reloj de bolsillo se detuvo a las 21:45. El tren llega a la próxima estación a las 22:30. ¿Cuántos minutos quedan para atrapar al asesino?",
+    respuestas: ["45", "cuarenta y cinco"],
+    pista: "De 21:45 a 22:00 son 15 minutos.",
     numerica: true,
   },
 };
 
-// Una por cada frasco del laboratorio, en orden.
-export const preguntasAlquimago: Pregunta[] = [
+// Una por cada tubo de ensayo del laboratorio, en orden.
+export const preguntasAntidoto: Pregunta[] = [
   {
-    texto: "El Mago Chai solo le abre a quien conoce al festejado. ¿Cuántos años cumple Santi?",
+    texto: "La puerta del laboratorio solo se abre si sabes a quién vienes a celebrar. ¿Cuántos años cumple Santi?",
     respuestas: ["11", "once"],
-    pista: "Está escrito en la puerta de entrada.",
+    pista: "Está escrito en la portada de esta invitación.",
     numerica: true,
   },
   {
@@ -46,9 +46,9 @@ export const preguntasAlquimago: Pregunta[] = [
     pista: "De un año al siguiente, la fecha se corre un día de la semana.",
   },
   {
-    texto: "La receta pide 0,5 litros de agua de luna y 1,5 litros de rocío. ¿Cuántos litros son en total?",
-    respuestas: ["2", "dos", "2,0", "2.0"],
-    pista: "Suma los decimales: 0,5 + 1,5.",
+    texto: "El virus TS-51 se duplica cada hora. Si ahora hay 3 muestras, ¿cuántas habrá en 3 horas?",
+    respuestas: ["24", "veinticuatro"],
+    pista: "3 → 6 → 12 → …",
     numerica: true,
   },
 ];

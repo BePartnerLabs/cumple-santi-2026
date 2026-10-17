@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { publico, type Vista } from "@/lib/config";
+import { encontrarHuevo } from "@/lib/huevos";
 import { pedir } from "@/lib/progreso";
+
+// Nombres de los villanos: escribirlos como código es un secreto.
+const SOSPECHOSOS = ["BAUER", "CORONELBAUER", "BRANDT", "DRBRANDT", "WALTERBRANDT"];
 
 export function Gate({ onOpen, onAbriendo }: { onOpen: (vista: Vista) => void; onAbriendo: () => void }) {
   const [codigo, setCodigo] = useState("");
@@ -13,6 +17,7 @@ export function Gate({ onOpen, onAbriendo }: { onOpen: (vista: Vista) => void; o
   async function entrar(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (SOSPECHOSOS.includes(codigo.replace(/[^A-Z]/g, ""))) return encontrarHuevo("culpable");
     setBuscando(true);
     try {
       const vista = await pedir({ codigo });

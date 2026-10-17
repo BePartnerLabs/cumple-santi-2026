@@ -5,11 +5,11 @@ import type { Vista } from "./config";
 
 // Lo que este teléfono recuerda: con qué código entró y qué casos lleva.
 // Que el reto esté superado lo guarda el servidor, así vale en cualquier teléfono.
-export type Progreso = { codigo: string | null; casona: boolean; alquimago: boolean };
+export type Progreso = { codigo: string | null; budapest: boolean; antidoto: boolean; huevos: string[] };
 
 const LLAVE = "santi11";
 const EVENTO = "santi11-cambio";
-const VACIO: Progreso = { codigo: null, casona: false, alquimago: false };
+const VACIO: Progreso = { codigo: null, budapest: false, antidoto: false, huevos: [] };
 
 // Respaldo por si el navegador bloquea localStorage (modo privado).
 let memoria: string | null = null;
@@ -47,7 +47,10 @@ export function guardarProgreso(cambio: Partial<Progreso>) {
   window.dispatchEvent(new Event(EVENTO));
 }
 
-export const olvidarProgreso = () => guardarProgreso(VACIO);
+export const leerProgreso = () => interpretar(leer());
+
+// Al salir se olvida el código y el avance, pero no los secretos encontrados.
+export const olvidarProgreso = () => guardarProgreso({ ...VACIO, huevos: leerProgreso().huevos });
 
 export function useProgreso() {
   const crudo = useSyncExternalStore(suscribir, leer, () => null);

@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { publico, type Vista } from "@/lib/config";
+import { encontrarHuevo, EVENTO_HUEVO, HUEVOS, TOTAL_HUEVOS, type HuevoId } from "@/lib/huevos";
 import { ErrorDeCodigo, guardarProgreso, olvidarProgreso, pedir, useProgreso } from "@/lib/progreso";
 import { enSilencio, musica, ponerSilencio, sonar } from "@/lib/sonido";
-import { Alquimago } from "./Alquimago";
-import { Casona } from "./Casona";
+import { Antidoto } from "./Antidoto";
+import { Budapest } from "./Budapest";
 import { Gate } from "./Gate";
 import { Rsvp } from "./Rsvp";
 
@@ -15,6 +16,41 @@ export function Invitation() {
   const [errorReto, setErrorReto] = useState("");
   const [silencio, setSilencio] = useState(false);
   const revelado = useRef<HTMLElement>(null);
+  const [huevo, setHuevo] = useState<HuevoId | null>(null);
+  const toques = useRef(0);
+
+  // Avisa cada secreto encontrado con un mensaje que se va solo.
+  useEffect(() => {
+    let reloj: number | undefined;
+    function mostrar(e: Event) {
+      setHuevo((e as CustomEvent<HuevoId>).detail);
+      window.clearTimeout(reloj);
+      reloj = window.setTimeout(() => setHuevo(null), 5000);
+    }
+    window.addEventListener(EVENTO_HUEVO, mostrar);
+    return () => {
+      window.removeEventListener(EVENTO_HUEVO, mostrar);
+      window.clearTimeout(reloj);
+    };
+  }, []);
+
+  // Para los curiosos que abren la consola del navegador.
+  useEffect(() => {
+    const w = window as typeof window & { santi?: () => string };
+    w.santi = () => {
+      encontrarHuevo("hacker");
+      return "Acceso concedido, agente. Mira la invitación.";
+    };
+    console.log(
+      "%c¿Investigando el código? Escribe santi() y presiona Enter.",
+      "color:#e8c46a;font-size:14px;font-weight:bold",
+    );
+  }, []);
+
+  function tocarTitulo() {
+    toques.current += 1;
+    if (toques.current === publico.edad) encontrarHuevo("once");
+  }
 
   // Quien vuelve con su código guardado entra directo: el servidor dice si ya superó el reto.
   useEffect(() => {
@@ -40,9 +76,9 @@ export function Invitation() {
   }, []);
 
   const reto = vista?.invitado.reto ?? false;
-  const casona = reto || local.casona;
-  const alquimago = reto || local.alquimago;
-  const resueltos = Number(casona) + Number(alquimago);
+  const budapest = reto || local.budapest;
+  const antidoto = reto || local.antidoto;
+  const resueltos = Number(budapest) + Number(antidoto);
 
   async function registrarReto() {
     setErrorReto("");
@@ -55,9 +91,9 @@ export function Invitation() {
     }
   }
 
-  function casoResuelto(caso: "casona" | "alquimago") {
+  function casoResuelto(caso: "budapest" | "antidoto") {
     guardarProgreso({ [caso]: true });
-    const otro = caso === "casona" ? alquimago : casona;
+    const otro = caso === "budapest" ? antidoto : budapest;
     if (otro) window.setTimeout(registrarReto, 900); // deja sonar el final del caso
   }
 
@@ -84,6 +120,13 @@ export function Invitation() {
         />
       )}
 
+      {huevo && (
+        <div className="huevo" role="status" key={huevo}>
+          <strong>¡Secreto encontrado!</strong>
+          {HUEVOS[huevo].mensaje}
+        </div>
+      )}
+
       <button type="button" className="sonido" onClick={alternarSonido} aria-pressed={!silencio}>
         {silencio ? "Sonido apagado" : "Sonido prendido"}
       </button>
@@ -93,13 +136,13 @@ export function Invitation() {
           <p className="portada__sobre">
             {vista ? `${vista.invitado.nombre}, estás` : "Estás"} invitado al cumpleaños de
           </p>
-          <h1>
+          <h1 onClick={tocarTitulo}>
             {publico.festejado} cumple {publico.edad}
           </h1>
           <p className="portada__bajada">
             {reto
               ? "Ya superaste el reto: aquí abajo están los datos de la fiesta y tu sala. Los casos siguen más abajo por si quieres repasarlos."
-              : "Dos salas de escape, dos misterios. Antes de la fiesta hay un reto: resuelve los dos casos y se revela dónde y cuándo nos juntamos."}
+              : "Un asesinato en un tren nocturno y un virus que hay que detener. Antes de la fiesta hay un reto: resuelve los dos casos y se revela dónde y cuándo nos juntamos."}
           </p>
         </header>
 
@@ -151,8 +194,8 @@ export function Invitation() {
 
         {reto && vista && <Rsvp vista={vista} onVista={setVista} />}
 
-        <Casona resuelto={casona} onResuelto={() => casoResuelto("casona")} />
-        <Alquimago resuelto={alquimago} onResuelto={() => casoResuelto("alquimago")} />
+        <Budapest resuelto={budapest} onResuelto={() => casoResuelto("budapest")} />
+        <Antidoto resuelto={antidoto} onResuelto={() => casoResuelto("antidoto")} />
 
         <footer className="pie">
           <h2>Para papás y mamás</h2>
@@ -163,9 +206,15 @@ export function Invitation() {
           </p>
           <p>
             El local recomienda sus salas desde los 12 años; los menores entran acompañados por un
-            adulto. La Casona Dubois cuenta una historia de fantasmas con temas oscuros; El
-            Alquimago es de magia y no asusta. Si tu hijo o hija prefiere evitar sustos, marquen El
-            Alquimago.
+            adulto. Budapest Express es un misterio de detectives (un crimen en un tren) y es la más
+            difícil; Antídoto es de científicos y laboratorio, y no asusta. Si tu hijo o hija prefiere
+            algo más tranquilo, marquen Antídoto.
+          </p>
+          <p className="pie__huevos">
+            Hay {TOTAL_HUEVOS} secretos escondidos en esta invitación.{" "}
+            {local.huevos.length
+              ? `Llevas ${local.huevos.length} de ${TOTAL_HUEVOS}.`
+              : "¿Encontrarás alguno?"}
           </p>
           {vista && (
             <button type="button" className="enlace" onClick={salir}>

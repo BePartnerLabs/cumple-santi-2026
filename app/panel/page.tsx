@@ -35,8 +35,8 @@ async function borrar(formData: FormData) {
 }
 
 const etiqueta: Record<Preferencia, string> = {
-  casona: salas.casona.nombre,
-  alquimago: salas.alquimago.nombre,
+  budapest: salas.budapest.nombre,
+  antidoto: salas.antidoto.nombre,
   igual: "Sin preferencia",
 };
 
@@ -68,7 +68,7 @@ export default async function Panel({ searchParams }: PageProps<"/panel">) {
       ) : (
         <>
           <p>
-            Vienen {van.length}: {cuenta("casona")} a la Casona, {cuenta("alquimago")} al Alquimago y{" "}
+            Vienen {van.length}: {cuenta("budapest")} a Budapest Express, {cuenta("antidoto")} a Antídoto y{" "}
             {cuenta("igual")} sin preferencia. No pueden {todos.length - van.length - sinResponder}. Faltan por
             responder {sinResponder}.
           </p>

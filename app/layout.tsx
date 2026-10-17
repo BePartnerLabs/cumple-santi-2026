@@ -11,9 +11,9 @@ const sitio = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : "http://localhost:3000";
 
-const titulo = `${publico.festejado} cumple ${publico.edad}: misión escape room`;
+const titulo = `${publico.festejado} cumple ${publico.edad}: dos casos por resolver`;
 // Esto es lo que se ve al compartir el link (WhatsApp, etc.): cuándo y dónde.
-const resumen = `${fiesta.dia}, ${fiesta.hora.toLowerCase()}. ${fiesta.lugar}, ${fiesta.direccion}. Entra con tu código, resuelve los dos casos y elige tu sala.`;
+const resumen = `${fiesta.dia}, ${fiesta.hora.toLowerCase()}. ${fiesta.lugar}, ${fiesta.direccion}. Entra con tu código, atrapa al asesino del Budapest Express, prepara el antídoto y elige tu sala.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(sitio),
@@ -49,7 +49,7 @@ const evento = {
   location: {
     "@type": "Place",
     name: fiesta.lugar,
-    address: { "@type": "PostalAddress", streetAddress: "Rodó 1927", addressLocality: "Providencia", addressRegion: "Región Metropolitana", addressCountry: "CL" },
+    address: { "@type": "PostalAddress", streetAddress: "Presidente Riesco 5330", addressLocality: "Las Condes", addressRegion: "Región Metropolitana", addressCountry: "CL" },
   },
 };
 

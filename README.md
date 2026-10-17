@@ -1,6 +1,6 @@
 # Cumple de Santi 2026
 
-Invitación móvil para el cumpleaños 11 de Santi en Fuga Escape Room (La Casona Dubois y El Alquimago).
+Invitación móvil para el cumpleaños 11 de Santi en Escapology Santiago (Budapest Express y Antídoto).
 
 ## Cómo funciona
 

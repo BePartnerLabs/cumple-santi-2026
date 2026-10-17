@@ -5,9 +5,9 @@ import type { Fiesta } from "./config";
 export const fiesta: Fiesta = {
   dia: "Sábado 24 de octubre (por confirmar)",
   hora: "Hora por confirmar",
-  lugar: "Fuga Escape Room",
-  direccion: "Rodó 1927, Providencia",
-  mapa: "https://www.google.com/maps/search/?api=1&query=Fuga+Escape+Room+Rod%C3%B3+1927+Providencia",
+  lugar: "Escapology, Parque Araucano",
+  direccion: "Presidente Riesco 5330, Las Condes",
+  mapa: "https://www.google.com/maps/search/?api=1&query=Escapology+Presidente+Riesco+5330+Las+Condes",
 };
 
 // Para la vista previa de WhatsApp y los buscadores. Cuando haya reserva, poner

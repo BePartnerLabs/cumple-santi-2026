@@ -6,8 +6,8 @@ import { pedir } from "@/lib/progreso";
 import { sonar } from "@/lib/sonido";
 
 const OPCIONES: { valor: Preferencia; titulo: string; detalle: string }[] = [
-  { valor: "casona", titulo: salas.casona.nombre, detalle: "Fantasmas, una gárgola y un sótano. Da un poco de susto." },
-  { valor: "alquimago", titulo: salas.alquimago.nombre, detalle: "Magia, pociones y un laboratorio secreto. Cero sustos." },
+  { valor: "budapest", titulo: salas.budapest.nombre, detalle: "Detectives, sospechosos y un crimen en un tren. La más difícil." },
+  { valor: "antidoto", titulo: salas.antidoto.nombre, detalle: "Científicos, tubos de ensayo y un virus por detener. Cero sustos." },
   { valor: "igual", titulo: "Me da lo mismo", detalle: "Pónganme en el equipo donde falte gente." },
 ];
 
@@ -50,7 +50,7 @@ export function Rsvp({ vista, onVista }: { vista: Vista; onVista: (v: Vista) => 
         <div className="equipos">
           <h3>Así van los equipos</h3>
           <div className="equipos__dos">
-            {(["casona", "alquimago"] as const).map((s) => (
+            {(["budapest", "antidoto"] as const).map((s) => (
               <div className={`equipo equipo--${s}`} key={s}>
                 <h4>{salas[s].nombre}</h4>
                 <p className="equipo__cuenta">
