@@ -8,9 +8,15 @@ import "./juego.css";
 const titulos = Special_Elite({ weight: "400", subsets: ["latin"], variable: "--font-titulos" });
 const texto = Figtree({ subsets: ["latin"], variable: "--font-texto" });
 
-const sitio = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : "http://localhost:3000";
+// El dominio que se comparte. Vercel a veces entrega el *.vercel.app como dominio
+// de producción, y entonces la vista previa de WhatsApp apunta allá: por eso va fijo.
+const DOMINIO = "https://cumple-santi.giorgiosaud.io";
+const sitio =
+  process.env.VERCEL_ENV === "production"
+    ? DOMINIO
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000";
 
 const titulo = `${publico.festejado} cumple ${publico.edad}: Expediente TS-51`;
 // Esto es lo que se ve al compartir el link (WhatsApp, etc.): cuándo y dónde.
